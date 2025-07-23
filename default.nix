@@ -6,15 +6,17 @@
 # commands such as:
 #     nix-build -A mypackage
 
-{ pkgs ? import <nixpkgs> { } }:
-
+{
+  pkgs ? import <nixpkgs> { },
+}:
+let
+  mylib = import ./lib { inherit pkgs; };
+in
 {
   # The `lib`, `modules`, and `overlays` names are special
-  lib = import ./lib { inherit pkgs; }; # functions
+  lib = mylib; # functions
   modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
-  example-package = pkgs.callPackage ./pkgs/example-package { };
-  # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
-  # ...
+  git-simple-encrypt = pkgs.callPackage ./pkgs/git-simple-encrypt.nix { inherit mylib; };
 }
