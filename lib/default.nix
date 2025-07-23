@@ -11,10 +11,11 @@ with pkgs.lib;
       pname,
       bname,
       version,
-      description,
       hashes,
       nixSystem,
-      libc,
+      libc ? "gnu",
+      description ? "",
+      license ? licenses.mit,
       overrideStdenv ? null,
     }:
     let
@@ -44,11 +45,11 @@ with pkgs.lib;
       '';
 
       meta = with lib; {
-        inherit description;
+        inherit description license;
         homepage = "https://github.com/lxl66566/${pname}";
-        license = licenses.mit;
         platforms = [ nixSystem ];
         maintainers = with maintainers; [ "lxl66566" ];
+        mainProgram = bname;
       };
     };
 }
