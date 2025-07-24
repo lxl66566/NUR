@@ -23,4 +23,5 @@ in
     inherit mylib;
   };
   git-sync-backup = pkgs.callPackage ./pkgs/git-sync-backup { inherit mylib; };
+  xp3-pack-unpack = pkgs.callPackage ./pkgs/xp3-pack-unpack { inherit mylib; };
 }

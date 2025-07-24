@@ -13,7 +13,7 @@ let
   bname = "loudness-normalize";
   description = "Easy to use audio loudness batch normalization tool based on EBU R128, written in Rust";
 
-  sourceInfo = import ./source-info.nix;
+  sourceInfo = lib.importJSON ./source-info.json;
   commonArgs = ({
     inherit
       stdenv

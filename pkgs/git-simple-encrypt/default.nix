@@ -13,7 +13,7 @@ let
   bname = "git-se";
   description = "Encrypt/decrypt files in git repo using one password";
 
-  sourceInfo = import ./source-info.nix;
+  sourceInfo = lib.importJSON ./source-info.json;
   commonArgs = {
     inherit
       stdenv

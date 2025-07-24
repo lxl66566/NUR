@@ -13,7 +13,7 @@ let
   bname = "gsb";
   description = "Synchronize and backup files/folders using Git, cross-device & configurable.";
 
-  sourceInfo = import ./source-info.nix;
+  sourceInfo = lib.importJSON ./source-info.json;
   commonArgs = {
     inherit
       stdenv

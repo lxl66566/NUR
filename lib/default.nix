@@ -9,10 +9,10 @@ with pkgs.lib;
       lib,
       pkgs,
       pname,
-      bname,
       version,
       hashes,
       nixSystem,
+      bname ? null,
       libc ? "gnu",
       description ? "",
       license ? licenses.mit,
@@ -21,6 +21,7 @@ with pkgs.lib;
     let
       hashInfo = hashes.${nixSystem}.${libc};
       currentStdenv = if overrideStdenv == null then stdenv else overrideStdenv;
+      nbname = if bname == null then pname else bname; # new binary name
     in
     currentStdenv.mkDerivation {
       inherit pname version;
@@ -40,7 +41,7 @@ with pkgs.lib;
       installPhase = ''
         runHook preInstall
         mkdir -p $out/bin
-        install -D ${bname} $out/bin/${bname}
+        install -D ${nbname} $out/bin/${nbname}
         runHook postInstall
       '';
 
@@ -49,7 +50,7 @@ with pkgs.lib;
         homepage = "https://github.com/lxl66566/${pname}";
         platforms = [ nixSystem ];
         maintainers = with maintainers; [ "lxl66566" ];
-        mainProgram = bname;
+        mainProgram = nbname;
       };
     };
 }
