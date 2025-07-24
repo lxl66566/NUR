@@ -26,7 +26,7 @@ with pkgs.lib;
       inherit pname version;
 
       src = fetchurl {
-        url = "https://github.com/lxl66566/${pname}/releases/download/v${version}/${pname}-${hashInfo.targetSystem}.tar.gz";
+        url = "https://github.com/lxl66566/${pname}/releases/download/${version}/${pname}-${hashInfo.targetSystem}.tar.gz";
         sha256 = hashInfo.sha256;
       };
       dontConfigure = true;

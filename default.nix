@@ -18,5 +18,9 @@ in
   modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
-  git-simple-encrypt = pkgs.callPackage ./pkgs/git-simple-encrypt.nix { inherit mylib; };
+  git-simple-encrypt = pkgs.callPackage ./pkgs/git-simple-encrypt { inherit mylib; };
+  audio-loudness-batch-normalize = pkgs.callPackage ./pkgs/audio-loudness-batch-normalize {
+    inherit mylib;
+  };
+  git-sync-backup = pkgs.callPackage ./pkgs/git-sync-backup { inherit mylib; };
 }
