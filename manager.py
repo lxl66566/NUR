@@ -71,7 +71,7 @@ async def calculate_sha256_from_url(session, url):
         return None
 
 
-async def process_single_package(package_name):
+async def process_single_package(package_name, binary_name=None):
     """
     处理单个包的核心逻辑：获取最新版本，并更新或创建 source-info.json。
     这是所有命令（init, update [pkg], update all）最终都会调用的函数。
@@ -109,7 +109,7 @@ async def process_single_package(package_name):
         tasks = []
         for arch_os, libc in TARGET_PLATFORMS:
             target_system = f"{arch_os.replace('-linux', '')}-unknown-linux-{libc}"
-            url = f"https://github.com/{REPO_OWNER}/{package_name}/releases/download/{latest_version}/{package_name}-{target_system}.tar.gz"
+            url = f"https://github.com/{REPO_OWNER}/{package_name}/releases/download/{latest_version}/{binary_name or package_name}-{target_system}.tar.gz"
             tasks.append(asyncio.create_task(calculate_sha256_from_url(session, url)))
 
         hashes_results = await asyncio.gather(*tasks)
@@ -146,10 +146,10 @@ async def process_single_package(package_name):
         )
 
 
-def run_process_single_package(package_name):
+def run_process_single_package(package_name, binary_name=None):
     """同步的包装器，用于在线程池中运行异步函数"""
     try:
-        asyncio.run(process_single_package(package_name))
+        asyncio.run(process_single_package(package_name, binary_name))
     except Exception as e:
         print(f"[!!!] 处理 {package_name} 时发生意外错误: {e}")
 
@@ -160,12 +160,13 @@ def run_process_single_package(package_name):
 def handle_init(args):
     """处理 'init' 命令"""
     print(f"--- 初始化 {len(args.packages)} 个包 ---")
+    binary_name = args.binary_name
     for package in args.packages:
         pkg_dir = PKGS_DIR / package
         if not pkg_dir.is_dir():
             print(f"[!] 目录 '{package}' 不存在，正在创建...")
             pkg_dir.mkdir(parents=True, exist_ok=True)
-        run_process_single_package(package)
+        run_process_single_package(package, binary_name)
 
 
 def handle_update(args):
@@ -211,6 +212,11 @@ def main():
         "init", help="为一个或多个新包初始化 source-info.json。"
     )
     parser_init.add_argument("packages", nargs="+", help="需要初始化的包的目录名。")
+    parser_init.add_argument(
+        "-b",
+        "--binary-name",
+        help="（可选）指定下载链接中使用的二进制文件名，默认为包名。",
+    )
     parser_init.set_defaults(func=handle_init)
 
     # update 命令
