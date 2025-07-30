@@ -13,3 +13,4 @@ My personal [NUR](https://github.com/nix-community/NUR) repository.
 | [audio-loudness-batch-normalize](https://github.com/lxl66566/audio-loudness-batch-normalize) | null, musl | Easy to use audio loudness batch normalization tool based on EBU R128, written in Rust |
 | [git-sync-backup](https://github.com/lxl66566/git-sync-backup) | null, musl | Synchronize and backup files/folders using Git, cross-device & configurable |
 | [xp3-pack-unpack](https://github.com/lxl66566/xp3-pack-unpack) | null | kirikiri xp3 format cli packer & unpacker |
+| [openppp2](https://github.com/liulilittle/openppp2) | null | Next-generation security network access technology, providing high-performance Virtual Ethernet tunneling service. |

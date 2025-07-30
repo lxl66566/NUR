@@ -47,8 +47,18 @@ with pkgs.lib;
       dontBuild = true;
       dontCheck = true;
 
+      nativeBuildInputs = lib.optional (lib.hasSuffix ".zip" finalUrl) pkgs.unzip;
+
       unpackPhase = ''
-        tar -xzf $src
+        runHook preUnpack
+
+        if [[ $src == *.zip ]]; then
+          unzip $src
+        else
+          tar -xzf $src
+        fi
+
+        runHook postUnpack
       '';
 
       installPhase = ''
