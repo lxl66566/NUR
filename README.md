@@ -2,7 +2,7 @@
 
 My personal [NUR](https://github.com/nix-community/NUR) repository.
 
-**All packages here are pre-built binaries.**
+**All packages here are pre-built binaries.** Because I don't like to compile by myself.
 
 ## How to use
 
@@ -13,16 +13,39 @@ My personal [NUR](https://github.com/nix-community/NUR) repository.
      inputs.nixpkgs.follows = "nixpkgs";
    };
    ```
-2. Add the following to your `configuration.nix`:
+2. Add overlays to pkgs as you like (for me, I use the following config):
    ```nix
-   nixpkgs.overlays = [ nur.overlays.default ];
+   let
+     pkgs = import nixpkgs {
+       inherit system;
+       overlays = [
+         nur.overlays.default
+       ];
+     };
+   in
+   lib.nixosSystem {
+     inherit pkgs;
+     # ......
+   }
    ```
 3. use packages in your config:
    ```nix
    {
-     environment.systemPackages = with pkgs; [
-       nur.repos.lxl66566.git-simple-encrypt
+     environment.systemPackages = [
+       pkgs.nur.repos.lxl66566.git-simple-encrypt
      ];
+   }
+   ```
+4. use modules in your config:
+   ```nix
+   {
+     imports = [
+       pkgs.nur.repos.lxl66566.modules.fungi
+     ];
+     services.fungi = {
+       enable = true;
+       configFile = ...
+     };
    }
    ```
 
@@ -37,3 +60,52 @@ My personal [NUR](https://github.com/nix-community/NUR) repository.
 | [openppp2](https://github.com/liulilittle/openppp2) | null | Next-generation security network access technology, providing high-performance Virtual Ethernet tunneling service. |
 | [user-startup-rs](https://github.com/lxl66566/user-startup-rs) | null, musl | Simple cross-platform tool to make your command auto run on startup |
 | [xp3-pack-unpack](https://github.com/lxl66566/xp3-pack-unpack) | null | kirikiri xp3 format cli packer & unpacker |
+| [fungi](https://github.com/enbop/fungi) | null | p2p tool cross platform |
+
+## modules
+
+### fungi
+
+not support attrSet config, since I don't use _fungi_ now... (currently using easytier.)
+
+```nix
+{
+  services.fungi = {
+    enable = true;
+    # package = pkgs.nur.repos.lxl66566.fungi;  # this is the default package, you can also use your own package
+    configFile = pkgs.writeText "test-config.toml" ''
+      [rpc]
+      listen_address = "127.0.0.1:5405"
+
+      [network]
+      listen_tcp_port = 0
+      listen_udp_port = 0
+      incoming_allowed_peers = [
+        "16Uiu2HAmN7utr2gU28MizZqpL3tHtFK3nnPfxedzYVCLBxxCDWAP",
+      ]
+      disable_relay = false
+      custom_relay_addresses = []
+
+      [tcp_tunneling.forwarding]
+      enabled = true
+      rules = []
+
+      [tcp_tunneling.listening]
+      enabled = true
+      rules = [
+        { host = "127.0.0.1", port = 22 }, # Expose SSH to remote devices
+      ]
+    '';
+    # or configFile = ./config.toml;
+  };
+}
+```
+
+## development
+
+how to test packages/modules in this NUR:
+
+```nix
+nix-build -A openppp2               # build package
+nix-build tests/fungi-test.nix      # build module
+```
