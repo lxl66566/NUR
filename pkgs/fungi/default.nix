@@ -28,6 +28,7 @@ let
     // {
       nixSystem = pkgs.stdenv.hostPlatform.system;
       libc = "gnu";
+      otherNativeBuildInputs = [ pkgs.autoPatchelfHook ];
     }
   );
 
