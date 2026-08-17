@@ -2,6 +2,7 @@
   stdenv,
   lib,
   pkgs,
+  zlib,
   makeBinPackage,
 }:
 
@@ -25,6 +26,7 @@ let
     // {
       nixSystem = stdenv.hostPlatform.system;
       libc = "gnu";
+      otherBuildInputs = [ zlib ];
     }
   );
 
@@ -46,6 +48,7 @@ let
         // {
           inherit nixSystem libc;
           overrideStdenv = if libc == "musl" then pkgs.pkgsStatic.stdenv else null;
+          otherBuildInputs = lib.optionals (libc != "musl") [ zlib ];
         }
       )
     ) libcMap
