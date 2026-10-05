@@ -223,3 +223,7 @@ how to test packages/modules in this NUR:
 nix-build -A openppp2               # build a package
 nix-build tests/fungi-test.nix      # test a module
 ```
+
+### disable auto update
+
+set `"autoupdate": false` in a package's `source-info.json` to exclude it from the CI auto update (`manager.py update`). update such a package manually with `uv run python manager.py update <pkg> --force`. e.g. [fail2ban-rs](pkgs/fail2ban-rs) is excluded because its release assets don't follow the tag naming the updater assumes.

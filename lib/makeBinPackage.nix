@@ -19,6 +19,8 @@
   license ? lib.licenses.mit,
   overrideStdenv ? null,
   owner ? "lxl66566",
+  # manager.py 元数据：为 false 时 CI 不自动更新该包；构建时忽略
+  autoupdate ? true,
 }:
 
 let

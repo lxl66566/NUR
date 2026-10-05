@@ -1,6 +1,7 @@
 {
   "owner": "aejimmi",
   "version": "1.5.4",
+  "autoupdate": false,
   "hashes": {
     "x86_64-linux": {
       "musl": {
